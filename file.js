@@ -35,7 +35,7 @@ overlay.style = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; ba
 overlay.className = 'fullscreen-overlay';
 
 const disclaimer = document.createElement('p');
-disclaimer.innerHTML = '<h1 style="color: #cdd6f4; text-align: center; padding: 20px 0;">CodeHS Answer Tool</h1><br><div style="margin-left: 20%; margin-right: 20%; display: flex; justify-content: center; align-items: center;"><div style="width: 100%;">Please enter your <span style="color: red;">AES-256 CBC-PBKDF2</span> decryption key now (do not click anything until finished):</div><input autocomplete="off" id="key" class="visually-hidden" style="background-color: black; color: white;"></div>';
+disclaimer.innerHTML = '<h1 style="color: #cdd6f4; text-align: center; padding: 20px 0;">CodeHS Answer Tool</h1><br><div style="margin-left: 20%; margin-right: 20%; display: flex; justify-content: center; align-items: center;"><div style="width: 100%;">Please enter your <span style="color: red;">AES-256 CBC-PBKDF2</span> decryption key now (click anywhere and start typing):</div><input autocomplete="off" id="key" class="visually-hidden" style="background-color: black; color: white;"></div>';
 
 const button = document.createElement('button');
 button.textContent = 'CONTINUE';

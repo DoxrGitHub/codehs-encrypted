@@ -30,29 +30,38 @@ b.keySize,b.ivSize);l.iv=d.iv;b=a.encrypt.call(this,b,c,d.key,l);b.mixIn(d);retu
 8&255]]^n[l[k&255]]},encryptBlock:function(a,b){this._doCryptBlock(a,b,this._keySchedule,t,r,w,v,l)},decryptBlock:function(a,c){var d=a[c+1];a[c+1]=a[c+3];a[c+3]=d;this._doCryptBlock(a,c,this._invKeySchedule,b,x,q,n,s);d=a[c+1];a[c+1]=a[c+3];a[c+3]=d},_doCryptBlock:function(a,b,c,d,e,j,l,f){for(var m=this._nRounds,g=a[b]^c[0],h=a[b+1]^c[1],k=a[b+2]^c[2],n=a[b+3]^c[3],p=4,r=1;r<m;r++)var q=d[g>>>24]^e[h>>>16&255]^j[k>>>8&255]^l[n&255]^c[p++],s=d[h>>>24]^e[k>>>16&255]^j[n>>>8&255]^l[g&255]^c[p++],t=
 d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j[h>>>8&255]^l[k&255]^c[p++],g=q,h=s,k=t;q=(f[g>>>24]<<24|f[h>>>16&255]<<16|f[k>>>8&255]<<8|f[n&255])^c[p++];s=(f[h>>>24]<<24|f[k>>>16&255]<<16|f[n>>>8&255]<<8|f[g&255])^c[p++];t=(f[k>>>24]<<24|f[n>>>16&255]<<16|f[g>>>8&255]<<8|f[h&255])^c[p++];n=(f[n>>>24]<<24|f[g>>>16&255]<<16|f[h>>>8&255]<<8|f[k&255])^c[p++];a[b]=q;a[b+1]=s;a[b+2]=t;a[b+3]=n},keySize:8});u.AES=p._createHelper(d)})();
 
+const overlay = document.createElement('div');
+overlay.style = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); color: #eff1f5; display: flex; justify-content: center; align-items: center; flex-direction: column; z-index: 9999;';
+overlay.className = 'fullscreen-overlay';
 
-    const overlay = document.createElement('div');
-    overlay.style = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); color: #eff1f5; display: flex; justify-content: center; align-items: center; flex-direction: column; z-index: 9999;';
-   overlay.className = 'fullscreen-overlay';
-    const disclaimer = document.createElement('p');
-disclaimer.innerHTML = '<h1 style="color: #cdd6f4; text-align: center; padding: 20px 0;">CodeHS Answer Tool</h1><br><div style="margin-left: 20%; margin-right: 20%; display: flex; justify-content: center; align-items: center;"><div style="width: 100%;">Please enter your <span style="color: red;">AES-256 CBC-PBKDF2</span> decryption key now (do not click anything until finished):</div><input autocomplete="off" id="key" class=visually-hidden style="background-color: black; color: white;"></div>';
-    const button = document.createElement('button');
-    button.textContent = 'CONTINUE';
-    button.addEventListener('click', removeButton);
-    button.style = "display: block; margin: 20px auto; padding: 10px 20px; background-color: #626880; color: #99d1db; border: none; border-radius: 5px; cursor: pointer; font-family: monospace; font-weight: bold;"
-    overlay.appendChild(disclaimer);
-    overlay.appendChild(button);
-    document.body.appendChild(overlay);
-    const style = document.createElement('style');
-    style.innerHTML = "body { font-family: monospace; } .visually-hidden { position: absolute; width: 1px!important; height: 1px!important; padding: 0!important; margin: -1px!important; overflow: hidden!important; clip: rect(0,0,0,0)!important; white-space: nowrap!important; border: 0!important; }"
-    document.body.appendChild(style);
+const disclaimer = document.createElement('p');
+disclaimer.innerHTML = '<h1 style="color: #cdd6f4; text-align: center; padding: 20px 0;">CodeHS Answer Tool</h1><br><div style="margin-left: 20%; margin-right: 20%; display: flex; justify-content: center; align-items: center;"><div style="width: 100%;">Please enter your <span style="color: red;">AES-256 CBC-PBKDF2</span> decryption key now (do not click anything until finished):</div><input autocomplete="off" id="key" class="visually-hidden" style="background-color: black; color: white;"></div>';
+
+const button = document.createElement('button');
+button.textContent = 'CONTINUE';
+button.addEventListener('click', removeButton);
+button.style = "display: block; margin: 20px auto; padding: 10px 20px; background-color: #626880; color: #99d1db; border: none; border-radius: 5px; cursor: pointer; font-family: monospace; font-weight: bold;"
+overlay.appendChild(disclaimer);
+overlay.appendChild(button);
+
+overlay.addEventListener('click', function(event) {
+    if (!event.target.matches('.visually-hidden') &&!event.target.closest('.visually-hidden')) {
+        document.getElementById("key").focus();
+    }
+});
+
+document.body.appendChild(overlay);
+
+const style = document.createElement('style');
+style.innerHTML = "body { font-family: monospace; }.visually-hidden { position: absolute; width: 1px!important; height: 1px!important; padding: 0!important; margin: -1px!important; overflow: hidden!important; clip: rect(0,0,0,0)!important; white-space: nowrap!important; border: 0!important; }";
+document.body.appendChild(style);
+
 document.getElementById("key").focus();
-
 
 function removeButton() {
     fetch("https://raw.githubusercontent.com/DoxrGitHub/codehs-encrypted/main/encrypted.txt")
-       .then(response => response.text())
-       .then(content => {
+      .then(response => response.text())
+      .then(content => {
             let secret = document.getElementById("key").value;
             var decrypted = CryptoJS.AES.decrypt(content, secret).toString(CryptoJS.enc.Utf8);
             const checkSecret = () => {
